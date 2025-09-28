@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a Express Taste</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #f8f9fa;">
+    
+    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+        
+        <!-- Header -->
+        <table style="width: 100%; background: linear-gradient(135deg, #a10539 0%, #ce5392 100%); background-color: #a10539; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+            <tr>
+                <td style="padding: 30px 20px; text-align: center;">
+                    <!-- Logo de Express Taste embebido en Base64 -->
+                    <img src="https://i.imgur.com/PzPDxp6.png" alt="Express Taste Logo" style="height: 80px; margin-bottom: 20px; background-color: transparent;">
+                    
+                    <h1 style="color: #ffffff; font-size: 28px; margin: 0 0 10px 0; font-weight: 700;">Express Taste</h1>
+                    <p style="color: rgba(255, 255, 255, 0.9); font-size: 16px; margin: 0;">La revolución gastronómica digital</p>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Welcome Message -->
+        <table style="width: 100%; border-left: 1px solid #a10539; border-right: 1px solid #a10539;">
+            <tr>
+                <td style="padding: 40px 30px 0 30px;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h2 style="color: #a10539; font-size: 24px; margin: 0 0 15px 0; font-weight: 700;">¡Hola {{ nombre }}! 🎉</h2>
+                        <p style="color: #555555; font-size: 16px; line-height: 1.6; margin: 0;">
+                            Nos complace darte la bienvenida a <strong style="color: #a10539;">Express Taste</strong>, la plataforma que revolucionará la forma en que tus clientes disfrutan de sus comidas en tu restaurante.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Next Steps Section -->
+        <table style="width: 100%; border-left: 1px solid #a10539; border-right: 1px solid #a10539;">
+            <tr>
+                <td style="padding: 0 30px 30px 30px;">
+                    <h3 style="color: #a10539; font-size: 20px; margin: 0 0 25px 0; text-align: center; font-weight: 700;">¿Qué necesitas hacer a continuación?</h3>
+                    
+                    <!-- Steps Grid -->
+                    <table style="width: 100%; margin-bottom: 30px;">
+                        <tr>
+                            <td style="width: 50%; padding-right: 10px; vertical-align: top;">
+                                <div style="background-color: #fafafa; padding: 20px; border-radius: 12px; border-left: 4px solid #ce5392; margin-bottom: 15px;">
+                                    <div style="font-size: 28px; margin-bottom: 12px;">🌟</div>
+                                    <div style="color: #a10539; font-weight: 700; font-size: 16px; margin-bottom: 8px;">Configura tu cuenta</div>
+                                    <div style="color: #666666; font-size: 14px; line-height: 1.5;">Completa la configuración de tu perfil de restaurante en la plataforma.</div>
+                                </div>
+                            </td>
+                            <td style="width: 50%; padding-left: 10px; vertical-align: top;">
+                                <div style="background-color: #fafafa; padding: 20px; border-radius: 12px; border-left: 4px solid #ce5392; margin-bottom: 15px;">
+                                    <div style="font-size: 28px; margin-bottom: 12px;">🍽️</div>
+                                    <div style="color: #a10539; font-weight: 700; font-size: 16px; margin-bottom: 8px;">Sube tu menú</div>
+                                    <div style="color: #666666; font-size: 14px; line-height: 1.5;">Asegúrate de que tu menú esté actualizado y sea atractivo.</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%; padding-right: 10px; vertical-align: top;">
+                                <div style="background-color: #fafafa; padding: 20px; border-radius: 12px; border-left: 4px solid #ce5392; margin-bottom: 15px;">
+                                    <div style="font-size: 28px; margin-bottom: 12px;">✅</div>
+                                    <div style="color: #a10539; font-weight: 700; font-size: 16px; margin-bottom: 8px;">Capacita a tu equipo</div>
+                                    <div style="color: #666666; font-size: 14px; line-height: 1.5;">Familiariza a tu personal con Express Taste.</div>
+                                </div>
+                            </td>
+                            <td style="width: 50%; padding-left: 10px; vertical-align: top;">
+                                <div style="background-color: #fafafa; padding: 20px; border-radius: 12px; border-left: 4px solid #ce5392; margin-bottom: 15px;">
+                                    <div style="font-size: 28px; margin-bottom: 12px;">🚀</div>
+                                    <div style="color: #a10539; font-weight: 700; font-size: 16px; margin-bottom: 8px;">Promueve la plataforma</div>
+                                    <div style="color: #666666; font-size: 14px; line-height: 1.5;">Informa a tus clientes sobre esta nueva experiencia.</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- CTA Button -->
+                    <div style="text-align: center; margin: 40px 0;">
+                        <a href="http://127.0.0.1:8000/acceder" 
+                           style="background: linear-gradient(135deg, #a10539 0%, #ce5392 100%); background-color: #ce5392; color: #ffffff; padding: 18px 40px; text-decoration: none; border-radius: 25px; font-weight: 700; font-size: 16px; display: inline-block; box-shadow: 0 4px 12px rgba(161, 5, 57, 0.3);">
+                            🌐 Acceder a la Plataforma
+                        </a>
+                    </div>
+
+                    <!-- Closing Message -->
+                    <div style="text-align: center; padding: 20px; background-color: #f8f9fa; border-radius: 12px; margin-top: 30px;">
+                        <p style="color: #a10539; font-size: 16px; font-weight: 700; margin: 0 0 10px 0;">
+                            🥂 Estamos emocionados de tenerte a bordo
+                        </p>
+                        <p style="color: #666666; font-size: 14px; margin: 0;">
+                            Esperamos que esta colaboración sea muy beneficiosa para tu restaurante.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Footer -->
+        <table style="width: 100%; background-color: #a10539; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;">
+            <tr>
+                <td style="padding: 30px 20px; text-align: center;">
+                    <!-- Logo footer -->
+                    <img src="https://i.imgur.com/PzPDxp6.png" alt="Express Taste" style="height: 40px; margin-bottom: 15px; background-color: transparent;">
+                    <p style="color: #ffffff; font-size: 18px; font-weight: 700; margin: 0 0 5px 0;">¡Gracias por unirte a Express Taste!</p>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 13px; margin: 0;">El equipo de Express Taste</p>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+    <!-- Instrucciones para implementar el logo -->
+    <!--
+    OPCIONES PARA AGREGAR TU LOGO:
+
+    1. OPCIÓN RECOMENDADA - Logo adjunto con CID:
+       - Adjunta tu imagen al correo con el nombre "express_taste_logo"
+       - En el código usa: src="cid:express_taste_logo"
+
+    2. Convertir logo a Base64:
+       - Ve a: https://www.base64-image.de/
+       - Sube tu logo y copia el resultado
+       - Reemplaza en: src="data:image/png;base64,AQUI_TU_CODIGO_BASE64"
+
+    3. Subir a hosting gratuito:
+       - Sube tu logo a imgur.com
+       - Copia la URL directa de la imagen
+       - Reemplaza en: src="https://i.imgur.com/tu-logo.png"
+    -->
+
+</body>
+</html>

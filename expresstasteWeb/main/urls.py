@@ -15,7 +15,10 @@ router.register(r'pedidos',         views.PedidoViewSet)
 router.register(r'detalle-pedido',  views.DetallePedidoViewSet)
 
 urlpatterns = [
-    path('', views.inicio, name="inicio"),
+    path('',         views.principal,       name="principal"),
+    path('registro', views.registro,        name="registro"),
+    path('acceder',  views.login,           name="login"),
+    path('panel',    views.panel,           name="panel"),
 
     # API
     path('api/v1/', include(router.urls))

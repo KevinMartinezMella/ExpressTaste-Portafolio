@@ -1,5 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+
+from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 
 from . models import Usuario, Categoria, Producto, TipoNegocio, Negocio, EstadoPedido, Mesa, Pedido, DetallePedido, Rol
 from . serializers import UsuarioSerializer, CategoriaSerializer, ProductoSerializer, NegocioSerializer, TipoNegocioSerializer, MesaSerializer, EstadoPedidoSerializer, PedidoSerializer, DetallePedidoSerializer, RolSerializer
@@ -8,9 +12,72 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-def inicio(request):
-    return HttpResponse('ksajdkasjdkas')
 
+
+def principal(request):
+    return render(request, 'index.html')
+
+def login(request):
+    if request.method == 'POST':
+        email = request.POST["correo"]
+        contrasena = request.POST["contrasena"]
+        
+        usuario = Usuario.objects.filter(['email', email], ['contrasena', contrasena])
+
+        if(len(usuario) > 0):
+            request.session["id_usuario"] = usuario[0].id
+            request.session["nombre_usuario"] = f'{usuario[0].nombre} {usuario[0].ap_paterno}'
+            return redirect('panel')
+
+    return render(request, 'autenticacion/login.html')
+
+def registro(request):
+    if(request.method == 'POST'):
+        nombre      = request.POST["nombre"]
+        ape_paterno = request.POST["ape_paterno"]
+        ape_materno = request.POST["ape_materno"]
+        email       = request.POST["correo"]
+        contrasena  = request.POST["contrasena"]
+        contar = Usuario.objects.filter(email = email)
+        if(len(contar) > 0):
+            errores = {
+                'mensaje': 'Este correo electrónico ya se encuentra registrado.',
+                'nombre': nombre,
+                'ape_paterno': ape_paterno,
+                'ape_materno': ape_materno,
+                'email': email
+            }
+            return render(request, 'autenticacion/registro.html', errores)
+        rol = Rol.objects.get(['id', 1])
+        usuario = Usuario(
+            nombre      = nombre,
+            ap_paterno  = ape_paterno,
+            ap_materno  = ape_materno,
+            email       = email,
+            contrasena  = contrasena,
+            rol         = rol
+        )
+        usuario.save()
+
+        request.session["id_usuario"] = usuario.id
+        request.session["nombre_usuario"] = f'{usuario.nombre} {usuario.ap_paterno}'
+
+        msg_html = render_to_string('correos/registro.html', {'nombre': nombre.capitalize()})
+        email_message = EmailMessage(
+            subject="ExpressTaste - Registro Exitoso 🎉",
+            body=msg_html,
+            from_email="ExpressTaste <envio6697@gmail.com>",
+            to=[email],
+        )
+        email_message.content_subtype = "html"
+        email_message.send(fail_silently=False)
+        return redirect('panel')
+    return render(request, 'autenticacion/registro.html')
+
+def panel(request):
+    if 'id_usuario' in request.session:
+        return render(request, 'administrador/panel.html')
+    return redirect('login')
 
 
 # API

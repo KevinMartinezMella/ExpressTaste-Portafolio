@@ -1,0 +1,41 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block contenido %}
+<div class="container-fluid page-body-wrapper full-page-wrapper">
+    <div class="content-wrapper d-flex align-items-center auth">
+        <div class="row flex-grow">
+            <div class="col-lg-4 mx-auto">
+                <div class="auth-form-light text-left p-5">
+                <div class="text-center mb-5">
+                    <img width="100" style="border-radius: 100%;" src="{% static 'assets/images/express-taste-logo.png' %}">
+                </div>
+                <h4 class="text-center">Hola, Comencemos a mejorar tu local.</h4>
+                <h6 class="font-weight-light text-center">inicia sesión para continuar.</h6>
+                <form class="pt-3" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input name="correo" type="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Correo Electrónico">
+                    </div>
+                    <div class="form-group">
+                        <input name="contrasena" type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Contraseña">
+                    </div>
+                    <div class="mt-3 d-grid gap-2">
+                        <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">ACCEDER</button>
+                    </div>
+                    <div class="my-3 d-flex justify-content-end align-items-center">
+                        <a href="#" class="auth-link text-primary">¿Olvidaste tu contraseña?</a>
+                    </div>
+                    <div class="text-center mt-4 font-weight-light mt-5"> ¿No tienes una cuenta?
+                        <a href="{% url 'registro' %}" class="text-primary">Registrate</a>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'assets/js/funciones/validar_login.js' %}"></script>
+{% endblock %}

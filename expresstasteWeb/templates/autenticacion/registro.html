@@ -1,0 +1,279 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block contenido %}
+
+{% block link %}
+<style>
+    .password-strength {
+        height: 4px;
+        margin-top: 5px;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+    .strength-weak { background-color: #dc3545; }
+    .strength-medium { background-color: #ffc107; }
+    .strength-strong { background-color: #198754; }
+    
+    .form-control.is-valid {
+        border-color: #198754;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='m2.3 6.73.94-.94 1.36 1.36L2.3 6.73zm4.52-4.17L4.66 4.72 3.3 3.36l2.16-2.16 1.36 1.36z'/%3e%3c/svg%3e");
+    }
+    
+    .form-control.is-invalid {
+        border-color: #dc3545;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 4.6 2.4 2.4M8.2 4.6l-2.4 2.4'/%3e%3c/svg%3e");
+    }
+</style>
+{% endblock %}
+<div class="container-fluid page-body-wrapper full-page-wrapper">
+    <div class="content-wrapper d-flex align-items-center auth">
+        <div class="row flex-grow">
+            <div class="col-lg-4 mx-auto">
+                <div class="auth-form-light text-left p-5">
+                <div class="text-center mb-5">
+                    <img width="100" style="border-radius: 100%;" src="{% static 'assets/images/express-taste-logo.png' %}">
+                </div>
+                <h4 class="text-center">¿Eres nuevo?.</h4>
+                <h6 class="font-weight-light text-center">Registraste, solo serán un par de pasos.</h6>
+
+                {% if mensaje %}
+                <div class="alert alert-danger mt-5 text-center">
+                    <i class="mdi mdi-alert-circle"></i> 
+                    {{ mensaje }}
+                </div>
+                {% endif %}
+                <form class="pt-3" method="POST" id="registrationForm" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <input {% if nombre %} value="{{ nombre }}" {% endif %} name="nombre" type="text" class="form-control form-control-lg" id="nombre" placeholder="Nombre" required minlength="2">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <input {% if ape_paterno %} value="{{ ape_paterno }}" {% endif %} name="ape_paterno" type="text" class="form-control form-control-lg" id="ape_paterno" placeholder="Apellido Paterno" required minlength="2">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <input {% if ape_materno %} value="{{ ape_materno }}" {% endif %} name="ape_materno" type="text" class="form-control form-control-lg" id="ape_materno" placeholder="Apellido Materno" required minlength="2">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input {% if email %} value="{{ email }}" {% endif %} name="correo" type="email" class="form-control form-control-lg" id="correo" placeholder="Correo Electrónico" required>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <input name="contrasena" type="password" class="form-control form-control-lg" id="contrasena" placeholder="Contraseña" required minlength="8">
+                            <div class="password-strength" id="password-strength"></div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <input name="confirmar_contrasena" type="password" class="form-control form-control-lg" id="confirmar_contrasena" placeholder="Confirmar Contraseña" required>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="mt-3 d-grid gap-2">
+                            <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" type="submit">REGISTRARSE</button>
+                        </div>
+                        <div class="text-center mt-4 font-weight-light mt-5"> ¿Ya tienes una cuenta?
+                            <a href="{% url 'login' %}" class="text-primary">Inicia Sesión</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registrationForm');
+    const inputs = form.querySelectorAll('input[required]');
+
+    // Mensajes de error personalizados
+    const errorMessages = {
+        nombre: 'El nombre es requerido y debe tener al menos 2 caracteres',
+        ape_paterno: 'El apellido paterno es requerido y debe tener al menos 2 caracteres',
+        ape_materno: 'El apellido materno es requerido y debe tener al menos 2 caracteres',
+        correo: 'Por favor ingresa un correo electrónico válido',
+        contrasena: 'La contraseña debe tener al menos 8 caracteres',
+        confirmar_contrasena: 'Las contraseñas no coinciden'
+    };
+
+    // Validación en tiempo real
+    inputs.forEach(input => {
+        // Validar al salir del campo
+        input.addEventListener('blur', function() {
+            validateField(this);
+        });
+
+        // Validar mientras escribe (solo para algunos campos)
+        if (input.name === 'correo' || input.name === 'contrasena' || input.name === 'confirmar_contrasena') {
+            input.addEventListener('input', function() {
+                validateField(this);
+            });
+        }
+    });
+
+    // Validación especial para contraseña
+    document.getElementById('contrasena').addEventListener('input', function() {
+        checkPasswordStrength(this.value);
+        // Revalidar confirmación si ya tiene contenido
+        const confirmInput = document.getElementById('confirmar_contrasena');
+        if (confirmInput.value) {
+            validateField(confirmInput);
+        }
+    });
+
+    // Validación especial para confirmar contraseña
+    document.getElementById('confirmar_contrasena').addEventListener('input', function() {
+        validateField(this);
+    });
+
+    // Validación al enviar formulario
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let isValid = true;
+        inputs.forEach(input => {
+            if (!validateField(input)) {
+                isValid = false;
+            }
+        });
+
+        if (isValid) {
+            form.submit();
+        } else {
+            const firstError = form.querySelector('.is-invalid');
+            if (firstError) {
+                firstError.focus();
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    });
+
+    function validateField(input) {
+        const value = input.value.trim();
+        let isValid = true;
+        let message = '';
+
+        // Limpiar estado anterior
+        input.classList.remove('is-valid', 'is-invalid');
+
+        switch (input.name) {
+            case 'nombre':
+            case 'ape_paterno':
+            case 'ape_materno':
+                if (!value) {
+                    isValid = false;
+                    message = errorMessages[input.name];
+                } else if (value.length < 2) {
+                    isValid = false;
+                    message = `Debe tener al menos 2 caracteres`;
+                } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value)) {
+                    isValid = false;
+                    message = 'Solo se permiten letras y espacios';
+                }
+                break;
+
+            case 'correo':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!value) {
+                    isValid = false;
+                    message = 'El correo electrónico es requerido';
+                } else if (!emailRegex.test(value)) {
+                    isValid = false;
+                    message = errorMessages[input.name];
+                }
+                break;
+
+            case 'contrasena':
+                if (!value) {
+                    isValid = false;
+                    message = 'La contraseña es requerida';
+                } else if (value.length < 8) {
+                    isValid = false;
+                    message = errorMessages[input.name];
+                } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value)) {
+                    isValid = false;
+                    message = 'Debe contener al menos: 1 mayúscula, 1 minúscula y 1 número';
+                }
+                break;
+
+            case 'confirmar_contrasena':
+                const password = document.getElementById('contrasena').value;
+                if (!value) {
+                    isValid = false;
+                    message = 'Debes confirmar tu contraseña';
+                } else if (value !== password) {
+                    isValid = false;
+                    message = errorMessages[input.name];
+                }
+                break;
+        }
+
+        // Aplicar estilos de validación
+        if (isValid) {
+            input.classList.add('is-valid');
+        } else {
+            input.classList.add('is-invalid');
+        }
+
+        // Mostrar mensaje de error
+        const feedback = input.parentNode.querySelector('.invalid-feedback');
+        if (feedback) {
+            feedback.textContent = message;
+        }
+
+        return isValid;
+    }
+
+    function checkPasswordStrength(password) {
+        const strengthBar = document.getElementById('password-strength');
+        let strength = 0;
+        
+        // Criterios de fuerza
+        if (password.length >= 8) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/\d/.test(password)) strength++;
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+
+        // Aplicar clases de fuerza
+        strengthBar.className = 'password-strength';
+        if (password.length === 0) {
+            strengthBar.style.width = '0%';
+        } else if (strength <= 2) {
+            strengthBar.classList.add('strength-weak');
+            strengthBar.style.width = '33%';
+        } else if (strength <= 3) {
+            strengthBar.classList.add('strength-medium');
+            strengthBar.style.width = '66%';
+        } else {
+            strengthBar.classList.add('strength-strong');
+            strengthBar.style.width = '100%';
+        }
+    }
+
+    // Validación adicional: Solo letras en nombres
+    const nameInputs = ['nombre', 'ape_paterno', 'ape_materno'];
+    nameInputs.forEach(name => {
+        const input = document.getElementById(name);
+        input.addEventListener('keypress', function(e) {
+            const char = String.fromCharCode(e.which);
+            if (!/[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(char)) {
+                e.preventDefault();
+            }
+        });
+    });
+});
+</script>
+<!-- <script src="{% static 'assets/js/funciones/validar_login.js' %}"></script> -->
+{% endblock %}
