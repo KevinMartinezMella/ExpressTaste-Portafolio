@@ -1,0 +1,18 @@
+{% extends 'base/base.html' %}
+
+{% block contenido %}
+{% include 'componentes/navbar.html' %}
+<div class="container-fluid page-body-wrapper">
+  {% include 'componentes/sidebar.html' %}
+  <div class="main-panel">
+    <div class="content-wrapper">
+      <div class="page-header">
+        <h3 class="page-title">
+          Usuarios
+        </h3>
+      </div>
+    </div>
+    {% include 'componentes/footer.html' %}
+  </div>
+</div>   
+{% endblock %}

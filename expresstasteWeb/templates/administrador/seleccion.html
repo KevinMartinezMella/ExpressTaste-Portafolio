@@ -1,0 +1,55 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block contenido %}
+<div class="container-fluid page-body-wrapper full-page-wrapper">
+    <div class="content-wrapper d-flex align-items-center justify-content-center">
+      <div class="card card-primary w-75 p-3" style="border-radius: 20px;">
+        <!-- <a href="{% url 'login' %}" class="text-end text-primary">Cerrar Sesión <i class="mdi mdi-logout text-primary"></i></a> -->
+        <div class="text-center mb-5 mt-3">
+          <img width="220" style="border-radius: 10px;" src="{% static 'assets/images/logo-grande.png' %}" alt="">
+        </div>
+        
+        <div class="container mt-5">
+            <div class="d-flex justify-content-between">
+                <b class="text-primary">Usuario: {{ request.session.nombre_usuario }}</b>
+                <a href="" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            </div>
+          <div class="row mt-3">
+            <div class="col-12 col-md-10 offset-md-1 col-lg-10 offset-lg-1">
+              <!-- <div class="login-brand text-center">
+                <img src="{% static 'assets/images/express-taste-logo.png' %}" alt="logo" width="50" class="shadow-light rounded-circle">
+                Express Taste
+              </div> -->
+  
+              <div class="card card-primary mt-3">
+                <div class="card-header"><h4 class="mb-0">Seleccionar negocio</h4></div>
+  
+                <div class="card-body">
+                  <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <select name="id_negocio" id="" class="form-select">
+                        <option value="">Seleccionar Negocio</option>
+                        {% for negocio in negocios %}
+                        <option value="{{ negocio.id }}">{{ negocio.negocio }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+  
+                    <div class="form-group text-center">
+                      <button type="submit" class="btn btn-lg btn-round btn-primary">
+                        Ingresar
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

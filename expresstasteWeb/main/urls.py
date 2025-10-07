@@ -15,10 +15,16 @@ router.register(r'pedidos',         views.PedidoViewSet)
 router.register(r'detalle-pedido',  views.DetallePedidoViewSet)
 
 urlpatterns = [
-    path('',         views.principal,       name="principal"),
-    path('registro', views.registro,        name="registro"),
-    path('acceder',  views.login,           name="login"),
-    path('panel',    views.panel,           name="panel"),
+    path('',                    views.principal,            name="principal"),
+    path('registro',            views.registro,             name="registro"),
+    path('acceder',             views.login,                name="login"),
+    path('panel',               views.panel,                name="panel"),
+    path('categorias',          views.categorias,           name="categorias"),
+    path('productos',           views.productos,            name="productos"),
+    path('mesas',               views.mesas,                name="mesas"),
+    path('usuarios',            views.usuarios,             name="usuarios"),
+    path('seleccion',           views.seleccion,            name="seleccion"),
+    path('registro-negocio',    views.registro_negocio,     name="registro_negocio"),
 
     # API
     path('api/v1/', include(router.urls))

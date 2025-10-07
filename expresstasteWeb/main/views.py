@@ -12,6 +12,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from . import funciones
 
 
 def principal(request):
@@ -27,7 +28,13 @@ def login(request):
         if(len(usuario) > 0):
             request.session["id_usuario"] = usuario[0].id
             request.session["nombre_usuario"] = f'{usuario[0].nombre} {usuario[0].ap_paterno}'
-            return redirect('panel')
+
+            cantidad_negocios = funciones.validar_negocio(usuario[0].id)
+
+            if(cantidad_negocios == 0):
+                return redirect('registro_negocio')
+
+            return redirect('seleccion')
 
     return render(request, 'autenticacion/login.html')
 
@@ -71,8 +78,63 @@ def registro(request):
         )
         email_message.content_subtype = "html"
         email_message.send(fail_silently=False)
+
+        cantidad_negocios = funciones.validar_negocio(usuario.id)
+
+        if(cantidad_negocios == 0):
+            return redirect('registro_negocio')
+        
+
         return redirect('panel')
     return render(request, 'autenticacion/registro.html')
+
+def categorias(request):
+    if 'id_usuario' in request.session:
+        negocio = Negocio.objects.get(id = request.session["id_negocio"])
+        categorias = Categoria.objects.filter(negocio = negocio.id)
+        return render(request, 'administrador/categorias.html', {'categorias': categorias})
+    return redirect('login')
+
+def productos(request):
+    if 'id_usuario' in request.session:
+        negocio = Negocio.objects.get(id = request.session["id_negocio"])
+        categorias = Categoria.objects.filter(negocio = negocio.id)
+        productos = Producto.objects.filter(categoria__in=categorias)
+        datos = {
+            'productos': productos,
+            'categorias': categorias,
+        }
+        return render(request, 'administrador/productos.html', datos)
+    return redirect('login')
+
+def mesas(request):
+    if 'id_usuario' in request.session:
+        negocio = Negocio.objects.get(id = request.session["id_negocio"])
+        mesas = Mesa.objects.filter(negocio = negocio)
+        return render(request, 'administrador/mesas.html', {'mesas': mesas})
+    return redirect('login')
+
+def usuarios(request):
+    if 'id_usuario' in request.session:
+        return render(request, 'administrador/usuarios.html')
+    return redirect('login')
+
+def seleccion(request):
+    if 'id_usuario' in request.session:
+        usuario = Usuario.objects.get(id = request.session["id_usuario"])
+        negocios = Negocio.objects.filter(usuario = usuario)
+        if request.method == 'POST':
+            request.session["id_negocio"] = request.POST["id_negocio"]
+            return redirect('panel')
+        return render(request, 'administrador/seleccion.html', {'negocios' : negocios})
+    return redirect('login')
+
+def registro_negocio(request):
+    if 'id_usuario' in request.session:
+        tipo_negocios = TipoNegocio.objects.all()
+        print(tipo_negocios)
+        return render(request, 'administrador/negocio.html', {'tipo_negocios': tipo_negocios})
+    return redirect('login')
 
 def panel(request):
     if 'id_usuario' in request.session:
